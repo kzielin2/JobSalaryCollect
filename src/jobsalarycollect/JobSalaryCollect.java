@@ -57,42 +57,58 @@ import java.util.logging.Logger;
  */
 public class JobSalaryCollect {
     public static void main(String[] args) throws IOException {
-        // test2
-        //Test2PreparingToExtractFromOffer exampleExtract = new Test2PreparingToExtractFromOffer();
-        //exampleExtract.uploadtest("https://nofluffjobs.com/pl/job/mid-senior-nodejs-software-engineer-westwing-remote-ybu4snsr");
+
         
         
         JobSalaryImport jobsimport = new JobSalaryImport();
-        String [] link2 = {
-                           "https://nofluffjobs.com/pl/praca-it?page=1&criteria=keyword%3D%27software%20engineer%27"
-                          ,"https://nofluffjobs.com/pl/praca-it?page=1&criteria=keyword%3D%27java%20developer%27"
-        };
-        String [] jobsArrayOutputLine = new String [6];
-        String stringLine= null;
+        jobsimport.uploadDataFromHtml("https://nofluffjobs.com/pl/praca-it/javascript?page=1&criteria=keyword%3D%27qa%20engineer%27");
+       // jobsimport.upLoadDataFromHtmlJobOffer("https://nofluffjobs.com/pl/job/regular-senior-c-developer-harman-connected-services-lodz-lzvicpq2");
+        String [] link24 = {
+                           /*  "https://nofluffjobs.com/pl/praca-it/python?page=1&criteria=keyword%3Dengineer"
+                            ,"https://nofluffjobs.com/pl/praca-it/c%2B%2B?page=1&criteria=keyword%3Dengineer"
+                            ,"https://nofluffjobs.com/pl/praca-it/php?page=1&criteria=keyword%3Dengineer"
+                            ,"https://nofluffjobs.com/pl/praca-it/javascript?page=1&criteria=requirement%3Dtypescript,angular%20keyword%3Dengineer"
+                            ,"https://nofluffjobs.com/pl/praca-it/docker?page=1&criteria=requirement%3Ddevops%20keyword%3Dengineer,k8s"
+                            ,"https://nofluffjobs.com/pl/praca-it/python?page=1&criteria=keyword%3Ddeveloper"*/
+                            "https://nofluffjobs.com/pl/praca-it/php?page=1&criteria=keyword%3Ddeveloper"
+                            ,"https://nofluffjobs.com/pl/praca-it/c%2B%2B?page=1&criteria=keyword%3Ddeveloper"
+                            ,"https://nofluffjobs.com/pl/praca-it?page=1&criteria=keyword%3D%27qa%20engineer%27"
+              
+                           };
+ //       String [] jobsArrayOutputLine = new String [7];
+ //      String stringLine= null;
         
-//        test 
+
+        
+ //       for (String link:link24){            
+//            String [][] jobsArrayOutput = jobsimport.uploadDataFromHtml(link);
+            
+
+//            for(int i=0;i < jobsArrayOutput.length; i++ ){
+//            // przygotowanie wiersza do wyszukiwnia dla funkcji serachinFile    
+//                String []arrayToSearch  = new String [7];
+//                for (int o=0; o<7; o++){
+//                    arrayToSearch [o] = jobsArrayOutput[i][o];
+//                }                
+//                boolean isFind = jobsimport.serachInFile(arrayToSearch);
+//                if (isFind == false){
+//                    for (int j=0; j <= 6; j++){
+//                        jobsArrayOutputLine[j] = jobsArrayOutput[i][j];
+//                    }
+//                    stringLine= jobsimport.formatFileLine(jobsArrayOutputLine);
+//                    jobsimport.writeOfferToFile(stringLine);                    
+//                }                                  
+//            }         
+//       }
+              
+
+// test2
+   //     Test2PreparingToExtractFromOffer exampleExtract = new Test2PreparingToExtractFromOffer();
+    //    exampleExtract.uploadtest("https://nofluffjobs.com/pl/job/security-engineer-smartpatient-remote-03sbkovv");
+        
+        //        test 
 //        Test testuje = new Test();
 //        testuje.uploadtest("https://nofluffjobs.com/pl/praca-it?page=1&criteria=keyword%3D%27java%20developer%27");
-        
-        for (String link:link2){            
-            String [][] jobsArrayOutput = jobsimport.uploadDataFromHtml(link);
-
-            for(int i=0;i < jobsArrayOutput.length; i++ ){
-            // przygotowanie wiersza do wyszukiwnia dla funkcji serachinFile    
-                String []arrayToSearch  = new String [6];
-                for (int o=0; o<6; o++){
-                    arrayToSearch [o] =jobsArrayOutput[i][o];
-                }                
-                boolean isFind = jobsimport.serachInFile(arrayToSearch);
-                if (isFind == false){
-                    for (int j=0; j <= 5; j++){
-                        jobsArrayOutputLine[j] = jobsArrayOutput[i][j];
-                    }
-                    stringLine= jobsimport.formatFileLine(jobsArrayOutputLine);
-                    jobsimport.writeOfferToFile(stringLine);                    
-                }                                  
-            }         
-        }
     }
     
 }
@@ -124,12 +140,20 @@ class JobSalaryImport {
           pageNumber++;
         }
         truePageNumber = pageNumber -2;
-        String[][] arrayOfFindJobsOffer = new String[findJobsOffer][6]; //tablicaInformacjeOWyszukanychOfertach
-
+       // System.out.println(findJobsOffer);
+        String[][] arrayOfFindJobsOffer = new String[findJobsOffer][7]; //tablicaInformacjeOWyszukanychOfertach
+        int s=0;
+        int z=0;
+        int y=0;
+        int x=0;
+        int w=0;
+        int z1=0;
+                
         
         
         for (int page=1; page<= truePageNumber; page++){        
             String link2 = linkSplit[0] + "page=" + page + linkSplit[1];
+            
             try {
                 Document doc = Jsoup.connect(link2).get();
                 Elements nazwyStanowisk = doc.select("h3.posting-title__position");
@@ -137,42 +161,54 @@ class JobSalaryImport {
                 Elements wynagrodzenia = doc.select("span.salary");
                 Elements linkiOferty = doc.select("a.posting-list-item");
                 Elements jobCompanies = doc.select("span.posting-title__company");
-                Elements jobTechnologies = doc.select("a[nfjstopevent]");
 
-            
-                for (int jobOffer=1; jobOffer<=nazwyStanowisk.toArray().length;jobOffer++){
-
-                    int s=(page-1)*20;
                     for (Element nazwaStanowiska : nazwyStanowisk ) {
                         arrayOfFindJobsOffer[s][0] = nazwaStanowiska.text();
+                    //    System.out.println(s);
                         s++;
                     }
-                    int k=(page-1)*20;
+                    
                     for (Element wynagrodzenie : wynagrodzenia ) {
-                        arrayOfFindJobsOffer[k][5] = wynagrodzenie.text();
-                        k++;
-                    }
-                    int m=(page-1)*20;
-                    for (Element miejsceWykonywaniaPracy : miejscaWykonywaniaPracy ) {
-                        arrayOfFindJobsOffer[m][2] = miejsceWykonywaniaPracy.text();
-                        m++;
-                    }
-                    int w=(page-1)*20;
-                    for (Element linkOferty : linkiOferty ) {
-                        arrayOfFindJobsOffer[w][3] = linkOferty.attr("href");
-                        w++;
-                    }
-                    int z=(page-1)*20;
-                    for (Element jobComapny : jobCompanies ) {
-                        arrayOfFindJobsOffer[z][4] = jobComapny.text().substring(1);
+                        arrayOfFindJobsOffer[z][1] = wynagrodzenie.text();
                         z++;
                     }
-                    int y=(page-1)*20;
-                    for (Element jobTechnology : jobTechnologies ) {
-                            arrayOfFindJobsOffer[y][1] = jobTechnology.text();
-                            y++;
+
+
+                    for (Element miejsceWykonywaniaPracy : miejscaWykonywaniaPracy ) {
+                        arrayOfFindJobsOffer[y][2] = miejsceWykonywaniaPracy.text();
+                        y++;
                     }
-                }
+
+                    for (Element linkOferty : linkiOferty ) {
+                        arrayOfFindJobsOffer[x][3] = linkOferty.attr("href"); 
+                        String linkOffer = "https://nofluffjobs.com" + linkOferty.attr("href");
+                        
+                        //System.out.println("w: " + w+ linkOffer);
+                        String[] requirements = upLoadDataFromHtmlJobOffer(linkOffer);
+                        arrayOfFindJobsOffer[x][5] = requirements[0];
+                        arrayOfFindJobsOffer[x][6]=  requirements[1];
+                        x++;
+                    }
+
+                    for (Element jobComapny : jobCompanies ) {
+                        arrayOfFindJobsOffer[z1][4] = jobComapny.text().substring(1);
+//                        if  (urlLink.contains("python"))
+//                                arrayOfFindJobsOffer[z][1]="phyton";
+//                        else if  (urlLink.contains("c%2B%2B"))
+//                                arrayOfFindJobsOffer[z][1]="c++";    
+//                        else if  (urlLink.contains("php"))
+//                                arrayOfFindJobsOffer[z][1]="php"; 
+//                        else if  (urlLink.contains("javascript"))
+//                                arrayOfFindJobsOffer[z][1]="JavaScript, Typescript, Angular"; 
+//                        else if  (urlLink.contains("docker"))
+//                                arrayOfFindJobsOffer[z][1]="docker, k8s, devops"; 
+//                        else  arrayOfFindJobsOffer[z][1]=""; 
+                       
+                        z1++;
+                    }
+                    
+
+               // }
             } catch (IOException ex) {
                 Logger.getLogger(JobSalaryImport.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -180,12 +216,12 @@ class JobSalaryImport {
             
 
         }
-//        for (int i=0; i < arrayOfFindJobsOffer.length; i++){
-//            for (int e=0; e <=5; e++){
-//                 System.out.print((arrayOfFindJobsOffer[i][e])+" ");
-//            }
-//            System.out.println();
-//        }
+        for (int i=0; i < arrayOfFindJobsOffer.length; i++){
+            for (int e=0; e <=6; e++){
+                 System.out.print((arrayOfFindJobsOffer[i][e])+" ");
+            }
+            System.out.println();
+        }
     return arrayOfFindJobsOffer;
     }
     
@@ -215,7 +251,7 @@ class JobSalaryImport {
          String outputLine = "";
         
         for (int s=0; s < input.length; s++){        
-            if ( s == 5 )
+            if ( s == 1 )
                 outputLine+=formatSalary(input);
             else 
                 outputLine += input[s] + ";";
@@ -224,7 +260,7 @@ class JobSalaryImport {
     }
     
     public String formatSalary (String [] inputLine){
-        String input = inputLine[5];
+        String input = inputLine[1];
         String outputLine = "";
         String jobOfferSalary = input.replace(" ","");
         String jobOfferSalaryCurrency = jobOfferSalary.substring(jobOfferSalary.length()-3);
@@ -236,6 +272,34 @@ class JobSalaryImport {
             outputLine += jobOfferSalaryValue + ";" + " " + ";" + jobOfferSalaryCurrency;
         return outputLine;              
     }
+    
+    public String [] upLoadDataFromHtmlJobOffer(String urlLink) {
+        String urlLink3 = urlLink;
+        String [] requirementsArray = new String [2];
+        try {
+                Document doc = Jsoup.connect(urlLink3).get();
+                Elements Requirements = doc.select("h3");
+               // String [] requirementsArray = new String [Requirements.size()];
+                int i =0;
+                    for (Element Requirement : Requirements ) {
+                      if (i==0) { 
+                          // obligatory Requirements
+                        requirementsArray[0]= Requirement.text();
+                      //  System.out.println(requirementsArray[0]);
+                      }
+                      if (i==1){
+                          //optional Requirements
+                        requirementsArray[1]= Requirement.text(); 
+                       // System.out.println(requirementsArray[1]);
+                      }  
+                      i++;              
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(JobSalaryImport.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          return requirementsArray;
+    }
+              
             
     
     public void writeOfferToFile(String offerToWrite) {
@@ -375,14 +439,14 @@ class Test2PreparingToExtractFromOffer {
 
             try {
                 Document doc = Jsoup.connect(link2).get();
-                Elements mandatoryRequirements1 = doc.select("a[nfjstopevent]");
+                //Elements mandatoryRequirements1 = doc.select("a[nfjstopevent]");
                 //Elements Requirements2 = doc.select("button[_ngcontent-sc306]");
-                Elements Requirements = doc.select("h3[_ngcontent-sc307]");
-                Elements skillsWelcome = doc.select("span.posting-info__location");
-                Elements wynagrodzenia = doc.select("span.salary");
-                Elements linkiOferty = doc.select("a.posting-list-item");
-                Elements jobCompanies = doc.select("span.posting-title__company");
-                Elements jobTechnologies = doc.select("a[nfjstopevent]");
+                Elements Requirements = doc.select("h3");
+               // Elements skillsWelcome = doc.select("span.posting-info__location");
+                //Elements wynagrodzenia = doc.select("span.salary");
+               // Elements linkiOferty = doc.select("a.posting-list-item");
+              //  Elements jobCompanies = doc.select("span.posting-title__company");
+              //  Elements jobTechnologies = doc.select("a[nfjstopevent]");
                 
                 String mandatorySkills="";
                 String welcomeSkills="";
@@ -392,23 +456,31 @@ class Test2PreparingToExtractFromOffer {
                 //for (int jobOffer=1; jobOffer<=nazwyStanowisk.toArray().length;jobOffer++){
 
                    // int s=(page-1)*20;
-                    for (Element mandatoryRequirement : mandatoryRequirements1 ) {
+             //       for (Element mandatoryRequirement : mandatoryRequirements1 ) {
                         //System.out.println(mandatoryRequirement.text());
                         //arrayOfFindJobsOffer[s][0] = nazwaStanowiska.text();
                        // s++;
-                    }
+              //      }
+            int i =1;
                     for (Element Requirement : Requirements ) {
-                        if (!Requirement.text().contains(" ")){
+                       // System.out.println("i: " + i);
+                      if (i==1)  
+                        System.out.println( "Wymagania obowiązkowe: " + Requirement.text());
+                      if (i==2)
+                        System.out.println( "Wymagania mile widziane: " + Requirement.text());
+                       i++;
+                     //   if (!Requirement.text().contains(" ")){
+                            
                              skills+=Requirement.text();
                         
-                    } else {
-                             skills+= Requirement.text().concat("\n");
+                    //} else {
+                       //      skills+= Requirement.text().concat("\n");
+                  //  }
                     }
-                    }
-                    String [] skillsarray = skills.split("\\n");
-                    mandatorySkills = skillsarray[0];
+                    //String [] skillsarray = skills.split("\\n");
+                    //mandatorySkills = skillsarray[0];
                     //welcomeSkills = skillsarray[1];
-                    System.out.println(mandatorySkills);
+                    System.out.println(skills);
                     //System.out.println(welcomeSkills);
                     //System.out.println(skillsarray[1]);
                     //System.out.println("Java Git English OOP Communication skills Design patterns Spring Hibernate Team player GOSU Guidewire Gerrit Maven Clean code JUnit SQL");
