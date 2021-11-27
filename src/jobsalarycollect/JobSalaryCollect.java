@@ -61,45 +61,45 @@ public class JobSalaryCollect {
         
         
         JobSalaryImport jobsimport = new JobSalaryImport();
-        jobsimport.uploadDataFromHtml("https://nofluffjobs.com/pl/praca-it/javascript?page=1&criteria=keyword%3D%27qa%20engineer%27");
+        //jobsimport.uploadDataFromHtml("https://nofluffjobs.com/pl/praca-it/javascript?page=1&criteria=keyword%3D%27qa%20engineer%27");
        // jobsimport.upLoadDataFromHtmlJobOffer("https://nofluffjobs.com/pl/job/regular-senior-c-developer-harman-connected-services-lodz-lzvicpq2");
         String [] link24 = {
-                           /*  "https://nofluffjobs.com/pl/praca-it/python?page=1&criteria=keyword%3Dengineer"
+                            "https://nofluffjobs.com/pl/praca-it/python?page=1&criteria=keyword%3Dengineer"
                             ,"https://nofluffjobs.com/pl/praca-it/c%2B%2B?page=1&criteria=keyword%3Dengineer"
                             ,"https://nofluffjobs.com/pl/praca-it/php?page=1&criteria=keyword%3Dengineer"
                             ,"https://nofluffjobs.com/pl/praca-it/javascript?page=1&criteria=requirement%3Dtypescript,angular%20keyword%3Dengineer"
                             ,"https://nofluffjobs.com/pl/praca-it/docker?page=1&criteria=requirement%3Ddevops%20keyword%3Dengineer,k8s"
-                            ,"https://nofluffjobs.com/pl/praca-it/python?page=1&criteria=keyword%3Ddeveloper"*/
-                            "https://nofluffjobs.com/pl/praca-it/php?page=1&criteria=keyword%3Ddeveloper"
+                            ,"https://nofluffjobs.com/pl/praca-it/python?page=1&criteria=keyword%3Ddeveloper"
+                            ,"https://nofluffjobs.com/pl/praca-it/php?page=1&criteria=keyword%3Ddeveloper"
                             ,"https://nofluffjobs.com/pl/praca-it/c%2B%2B?page=1&criteria=keyword%3Ddeveloper"
                             ,"https://nofluffjobs.com/pl/praca-it?page=1&criteria=keyword%3D%27qa%20engineer%27"
               
                            };
- //       String [] jobsArrayOutputLine = new String [7];
- //      String stringLine= null;
+       String [] jobsArrayOutputLine = new String [7];
+       String stringLine= null;
         
 
         
- //       for (String link:link24){            
-//            String [][] jobsArrayOutput = jobsimport.uploadDataFromHtml(link);
+        for (String link:link24){            
+            String [][] jobsArrayOutput = jobsimport.uploadDataFromHtml(link);
             
 
-//            for(int i=0;i < jobsArrayOutput.length; i++ ){
-//            // przygotowanie wiersza do wyszukiwnia dla funkcji serachinFile    
-//                String []arrayToSearch  = new String [7];
-//                for (int o=0; o<7; o++){
-//                    arrayToSearch [o] = jobsArrayOutput[i][o];
-//                }                
-//                boolean isFind = jobsimport.serachInFile(arrayToSearch);
-//                if (isFind == false){
-//                    for (int j=0; j <= 6; j++){
-//                        jobsArrayOutputLine[j] = jobsArrayOutput[i][j];
-//                    }
-//                    stringLine= jobsimport.formatFileLine(jobsArrayOutputLine);
-//                    jobsimport.writeOfferToFile(stringLine);                    
-//                }                                  
-//            }         
-//       }
+            for(int i=0;i < jobsArrayOutput.length; i++ ){
+            // przygotowanie wiersza do wyszukiwnia dla funkcji serachinFile    
+                String []arrayToSearch  = new String [7];
+                for (int o=0; o<7; o++){
+                    arrayToSearch [o] = jobsArrayOutput[i][o];
+                }                
+                boolean isFind = jobsimport.serachInFile(arrayToSearch);
+                if (isFind == false){
+                    for (int j=0; j <= 6; j++){
+                        jobsArrayOutputLine[j] = jobsArrayOutput[i][j];
+                    }
+                    stringLine= jobsimport.formatFileLine(jobsArrayOutputLine);
+                    jobsimport.writeOfferToFile(stringLine);                    
+                }                                  
+            }         
+       }
               
 
 // test2
@@ -216,12 +216,12 @@ class JobSalaryImport {
             
 
         }
-        for (int i=0; i < arrayOfFindJobsOffer.length; i++){
-            for (int e=0; e <=6; e++){
-                 System.out.print((arrayOfFindJobsOffer[i][e])+" ");
-            }
-            System.out.println();
-        }
+//        for (int i=0; i < arrayOfFindJobsOffer.length; i++){
+//            for (int e=0; e <=6; e++){
+//                 System.out.print((arrayOfFindJobsOffer[i][e])+" ");
+//            }
+//            System.out.println();
+//        }
     return arrayOfFindJobsOffer;
     }
     
