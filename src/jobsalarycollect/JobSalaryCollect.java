@@ -61,45 +61,47 @@ public class JobSalaryCollect {
         
         
         JobSalaryImport jobsimport = new JobSalaryImport();
-        //jobsimport.uploadDataFromHtml("https://nofluffjobs.com/pl/praca-it/javascript?page=1&criteria=keyword%3D%27qa%20engineer%27");
-       // jobsimport.upLoadDataFromHtmlJobOffer("https://nofluffjobs.com/pl/job/regular-senior-c-developer-harman-connected-services-lodz-lzvicpq2");
+       //jobsimport.uploadDataFromHtml("https://nofluffjobs.com/pl/praca-it/javascript?page=1&criteria=keyword%3D%27qa%20engineer%27");
+       //jobsimport.upLoadDataFromHtmlJobOfferSalary("https://nofluffjobs.com/pl/job/senior-react-native-developer-dunning-kruger-associates-wroclaw-agtgvzax");
         String [] link24 = {
-                            "https://nofluffjobs.com/pl/praca-it/python?page=1&criteria=keyword%3Dengineer"
+                            /*"https://nofluffjobs.com/pl/praca-it/python?page=1&criteria=keyword%3Dengineer"
                             ,"https://nofluffjobs.com/pl/praca-it/c%2B%2B?page=1&criteria=keyword%3Dengineer"
                             ,"https://nofluffjobs.com/pl/praca-it/php?page=1&criteria=keyword%3Dengineer"
                             ,"https://nofluffjobs.com/pl/praca-it/javascript?page=1&criteria=requirement%3Dtypescript,angular%20keyword%3Dengineer"
                             ,"https://nofluffjobs.com/pl/praca-it/docker?page=1&criteria=requirement%3Ddevops%20keyword%3Dengineer,k8s"
-                            ,"https://nofluffjobs.com/pl/praca-it/python?page=1&criteria=keyword%3Ddeveloper"
+                            /*,"https://nofluffjobs.com/pl/praca-it/python?page=1&criteria=keyword%3Ddeveloper"
                             ,"https://nofluffjobs.com/pl/praca-it/php?page=1&criteria=keyword%3Ddeveloper"
-                            ,"https://nofluffjobs.com/pl/praca-it/c%2B%2B?page=1&criteria=keyword%3Ddeveloper"
-                            ,"https://nofluffjobs.com/pl/praca-it?page=1&criteria=keyword%3D%27qa%20engineer%27"
+                            ,*/"https://nofluffjobs.com/pl/praca-it/c%2B%2B?page=1&criteria=keyword%3Ddeveloper"
+                            /*,"https://nofluffjobs.com/pl/praca-it?page=1&criteria=keyword%3D%27qa%20engineer%27"*/
               
                            };
-       String [] jobsArrayOutputLine = new String [7];
+       String [] jobsArrayOutputLine = new String [11];
        String stringLine= null;
         
 
         
-        for (String link:link24){            
+      for (String link:link24){            
             String [][] jobsArrayOutput = jobsimport.uploadDataFromHtml(link);
             
 
             for(int i=0;i < jobsArrayOutput.length; i++ ){
             // przygotowanie wiersza do wyszukiwnia dla funkcji serachinFile    
-                String []arrayToSearch  = new String [7];
-                for (int o=0; o<7; o++){
+                String []arrayToSearch  = new String [11];
+               // System.out.println(jobsArrayOutput.length);
+                for (int o=0; o< arrayToSearch.length; o++){
                     arrayToSearch [o] = jobsArrayOutput[i][o];
+                   // System.out.println(arrayToSearch [o]);
                 }                
                 boolean isFind = jobsimport.serachInFile(arrayToSearch);
                 if (isFind == false){
-                    for (int j=0; j <= 6; j++){
+                    for (int j=0; j <  arrayToSearch.length; j++){
                         jobsArrayOutputLine[j] = jobsArrayOutput[i][j];
                     }
                     stringLine= jobsimport.formatFileLine(jobsArrayOutputLine);
                     jobsimport.writeOfferToFile(stringLine);                    
                 }                                  
             }         
-       }
+      }
               
 
 // test2
@@ -122,7 +124,7 @@ class JobSalaryImport {
     public String [][] uploadDataFromHtml(String urlLink) {
         int info=1;
         int pageNumber=1;
-        int truePageNumber;
+        int truePageNumber=0;
         int findJobsOffer=0;
         String [] linkSplit= urlLink.split("page=1");
 
@@ -136,12 +138,13 @@ class JobSalaryImport {
                 Logger.getLogger(JobSalaryImport.class.getName()).log(Level.SEVERE, null, ex);
             }
           info = doc2.select("h3.posting-title__position").toArray().length;
-          findJobsOffer= findJobsOffer + info;
+          findJobsOffer+= info;
           pageNumber++;
+          truePageNumber++;
         }
-        truePageNumber = pageNumber -2;
+        
        // System.out.println(findJobsOffer);
-        String[][] arrayOfFindJobsOffer = new String[findJobsOffer][7]; //tablicaInformacjeOWyszukanychOfertach
+        String[][] arrayOfFindJobsOffer = new String[findJobsOffer][11]; //tablicaInformacjeOWyszukanychOfertach
         int s=0;
         int z=0;
         int y=0;
@@ -185,8 +188,13 @@ class JobSalaryImport {
                         
                         //System.out.println("w: " + w+ linkOffer);
                         String[] requirements = upLoadDataFromHtmlJobOffer(linkOffer);
+                        String [] fulSalaries = upLoadDataFromHtmlJobOfferSalary(linkOffer);
                         arrayOfFindJobsOffer[x][5] = requirements[0];
                         arrayOfFindJobsOffer[x][6]=  requirements[1];
+                        arrayOfFindJobsOffer[x][7]=  fulSalaries[0];
+                        arrayOfFindJobsOffer[x][8]=  fulSalaries[1];
+                        arrayOfFindJobsOffer[x][9]=  fulSalaries[2];
+                        arrayOfFindJobsOffer[x][10]= fulSalaries[3];
                         x++;
                     }
 
@@ -216,12 +224,12 @@ class JobSalaryImport {
             
 
         }
-//        for (int i=0; i < arrayOfFindJobsOffer.length; i++){
-//            for (int e=0; e <=6; e++){
-//                 System.out.print((arrayOfFindJobsOffer[i][e])+" ");
-//            }
-//            System.out.println();
-//        }
+        for (int i=0; i < arrayOfFindJobsOffer.length; i++){
+            for (int e=0; e <=10; e++){
+                 System.out.print((arrayOfFindJobsOffer[i][e])+" ");
+            }
+            System.out.println();
+        }
     return arrayOfFindJobsOffer;
     }
     
@@ -267,9 +275,9 @@ class JobSalaryImport {
         String jobOfferSalaryValue =jobOfferSalary.substring(0,jobOfferSalary.length()-3);
         if (jobOfferSalaryValue.contains("-")){
             String [] jobOffeSalryParts = jobOfferSalaryValue.split("-");
-            outputLine +=  jobOffeSalryParts[0] + ";" + jobOffeSalryParts[1] + ";" + jobOfferSalaryCurrency;
+            outputLine +=  jobOffeSalryParts[0] + ";" + jobOffeSalryParts[1] + ";" + jobOfferSalaryCurrency + ";";
             } else
-            outputLine += jobOfferSalaryValue + ";" + " " + ";" + jobOfferSalaryCurrency;
+            outputLine += jobOfferSalaryValue + ";" + " " + ";" + jobOfferSalaryCurrency + ";";
         return outputLine;              
     }
     
@@ -279,25 +287,59 @@ class JobSalaryImport {
         try {
                 Document doc = Jsoup.connect(urlLink3).get();
                 Elements Requirements = doc.select("h3");
+                Elements FullSalariesType= doc.select("p.type");
+                Elements FullSalaries = doc.select("div.salary");
+               Elements FullSalariesValue = doc.select("h4.mb-0");
                // String [] requirementsArray = new String [Requirements.size()];
                 int i =0;
                     for (Element Requirement : Requirements ) {
                       if (i==0) { 
                           // obligatory Requirements
                         requirementsArray[0]= Requirement.text();
-                      //  System.out.println(requirementsArray[0]);
+                       // System.out.println(requirementsArray[0]);
                       }
                       if (i==1){
                           //optional Requirements
                         requirementsArray[1]= Requirement.text(); 
-                       // System.out.println(requirementsArray[1]);
+                     //   System.out.println(requirementsArray[1]);
                       }  
                       i++;              
                 }
+
+
             } catch (IOException ex) {
                 Logger.getLogger(JobSalaryImport.class.getName()).log(Level.SEVERE, null, ex);
             }
           return requirementsArray;
+    }
+        public String [] upLoadDataFromHtmlJobOfferSalary(String urlLink) {
+        String urlLink3 = urlLink;
+        String [] salriesArray = new String [4];
+        try {
+                Document doc = Jsoup.connect(urlLink3).get();
+               // Elements Requirements = doc.select("h3");
+               // Elements FullSalariesType= doc.select("p.type");
+                Elements FullSalaries = doc.select("div.salary");
+              // Elements FullSalariesValue = doc.select("h4.mb-0");
+               // String [] requirementsArray = new String [Requirements.size()];
+                int i =0;
+
+
+//                    for (Element fullSalaryValue: FullSalariesValue){
+//                        System.out.println(fullSalaryValue.text());
+//                    }
+//                    for (Element fullSalaryType: FullSalariesType){
+//                        System.out.println(fullSalaryType.text());
+//                    }
+                     for (Element fullSalary: FullSalaries){
+                        salriesArray[i]= fullSalary.text(); 
+                      //  System.out.println(fullSalary.text());
+                        i++;
+                    }
+            } catch (IOException ex) {
+                Logger.getLogger(JobSalaryImport.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          return salriesArray;
     }
               
             
